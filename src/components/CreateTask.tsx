@@ -1,12 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Transition, Dialog } from "@headlessui/react";
 import { useTaskContext, TaskStatus, TaskData } from '../context/TaskContext';
 
 interface CreateTaskProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  edit?: boolean;
+  task?: TaskData;
 }
-export function CreateTask({ setOpen }: CreateTaskProps) {
-  const { addTask, tasks } = useTaskContext();
+export function CreateTask({ setOpen, edit, task }: CreateTaskProps) {
+  const { addTask, tasks, editTask } = useTaskContext();
   const [title, setTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newImportance, setNewImportance] = useState(false);
@@ -24,13 +26,37 @@ export function CreateTask({ setOpen }: CreateTaskProps) {
     }
 
     addTask(newTaskData);
-    localStorage.setItem('tasks', JSON.stringify([...tasks, newTaskData]));
 
     setTitle('');
     setNewDescription('');
     setNewImportance(false);
     setNewStatus(TaskStatus.Pending);
     setOpen(false);
+  };
+
+  useEffect(() => {
+    if (task && task.descricao) {
+      setTitle(task.title);
+      setNewDescription(task.descricao);
+      setNewImportance(task.importante);
+      setNewStatus(task.status);
+    }
+  }, [task])
+
+  const handleUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (task) {
+      const updatedTask: TaskData = {
+        id: task.id,
+        title: title,
+        status: newStatus,
+        descricao: newDescription,
+        importante: newImportance,
+        data: new Date()
+      };
+      editTask(task.id, updatedTask);
+      setOpen(false);
+    }
   };
 
   const handleClose = () => {
@@ -68,7 +94,7 @@ export function CreateTask({ setOpen }: CreateTaskProps) {
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start sm:justify-between">
                       <Dialog.Title as="h3" className="text-xl font-semibold leading-6 text-gray-900">
-                        Criar uma Tarefa
+                        {task ? 'Editar Tarefa' : 'Criar uma Tarefa'}
                       </Dialog.Title>
                       <button type="button" onClick={handleClose}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="black" className="w-6 h-6">
@@ -78,7 +104,7 @@ export function CreateTask({ setOpen }: CreateTaskProps) {
                     </div>
 
                     <div className="mt-8">
-                      <form onSubmit={handleSubmit}>
+                      <form onSubmit={task ? handleUpdate : handleSubmit}>
                         <div className="sm:col-span-4">
                           <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">
                             Título
@@ -90,7 +116,7 @@ export function CreateTask({ setOpen }: CreateTaskProps) {
                               id="title"
                               className="block w-full rounded-md border-0 p-4 py-1.5 text-gray-900 hover:ring-1 hover:ring-inset hover:ring-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-500 sm:text-sm sm:leading-6"
                               placeholder='Ex.: Arrumar a casa'
-                              defaultValue={''}
+                              defaultValue={task ? task.title : ''}
                               value={title}
                               onChange={(e) => setTitle(e.target.value)}
                             />
@@ -167,9 +193,8 @@ export function CreateTask({ setOpen }: CreateTaskProps) {
                           <button
                             type="submit"
                             className="justify-center rounded-md bg-red-600 py-2 text-base font-semibold text-white shadow-sm hover:bg-red-500 sm:w-full"
-
                           >
-                            Adicionar Tarefa
+                            {task ? 'Editar Tarefa' : 'Adicionar Tarefa'}
                           </button>
                         </div>
                       </form>

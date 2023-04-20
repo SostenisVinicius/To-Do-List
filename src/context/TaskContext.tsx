@@ -47,16 +47,19 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
   const addTask = (task: TaskData) => {
     setTasks([...tasks, task]);
+    localStorage.setItem('tasks', JSON.stringify([...tasks, task]));
   };
 
   const editTask = (taskId: number, updatedTask: TaskData) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) => (task.id === taskId ? updatedTask : task))
     );
+    localStorage.setItem('tasks', JSON.stringify([...tasks, updatedTask]));
   };
 
   const removeTask = (taskId: number) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+    localStorage.setItem('tasks', JSON.stringify(tasks.filter((task) => task.id !== taskId)));
   };
 
   return (
