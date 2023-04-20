@@ -10,8 +10,8 @@ export function Header() {
 
   return (
     <div className="mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-6 flex-col flex items-center justify-center">
-      <h1>To-do-list</h1>
-      <div className="flex items-center justify-center w-8/12">
+      <h1 className="text-2xl font-semibold text-white">Tarefas</h1>
+      <div className="w-full h-11 mt-8 flex items-center justify-center">
         <input
           // onChange={e => {
           //   setPageNumber(1)
@@ -21,7 +21,7 @@ export function Header() {
           type="text"
           name="search"
           autoComplete="off"
-          className="bg-white border border-gray-300 focus:ring-gray-500 focus:border-gray-500 block w-full p-2.5 rounded-md"
+          className="bg-white border border-gray-300 focus:ring-gray-500 focus:border-gray-500 block w-96 p-2.5 rounded-md"
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -36,16 +36,14 @@ export function Header() {
             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
           />
         </svg>
-        <Link href={'/CreateTask'}>
-          <button
-            type="button"
-            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-            onClick={() => setOpen(true)}
-          >
-            Adicionar
-          </button>
-        </Link>
-
+        <button
+          type="button"
+          className="inline-flex w-full h-11 justify-center items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+          onClick={() => setOpen(true)}
+        >
+          Adicionar
+        </button>
+        {open && <CreateTask setOpen={setOpen} />}
       </div>
     </div>
   )

@@ -1,17 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 export enum TaskStatus {
-  Pending = 'pendente',
-  InProgress = 'em andamento',
-  Completed = 'concluída',
+  Pending = 'Pendente',
+  InProgress = 'Em andamento',
+  Completed = 'Concluída',
 }
 
 export interface TaskData {
   id: number;
   title: string;
   status: TaskStatus;
-  data: string;
-  descricao: string;
+  data: Date;
+  descricao?: string;
   importante: boolean;
 }
 

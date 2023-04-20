@@ -5,11 +5,11 @@ import { Header } from '@/components/Header';
 
 export function Page() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-16">
+    <main className="flex min-h-screen flex-col items-center justify-between p-8">
       <div className="flex flex-col items-center justify-center">
         <Header/>
         <TaskList />
-        <CreateTask />
+        {/* <CreateTask /> */}
       </div>
     </main>
   )

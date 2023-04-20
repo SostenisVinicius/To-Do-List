@@ -2,120 +2,185 @@ import React, { Fragment, useState } from 'react';
 import { Transition, Dialog } from "@headlessui/react";
 import { useTaskContext, TaskStatus, TaskData } from '../context/TaskContext';
 
-export const CreateTask: React.FC = () => {
+interface CreateTaskProps {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export function CreateTask({ setOpen }: CreateTaskProps) {
   const { addTask, tasks } = useTaskContext();
-  const [newTask, setNewTask] = useState('');
+  const [title, setTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newImportance, setNewImportance] = useState(false);
   const [newStatus, setNewStatus] = useState(TaskStatus.Pending);
-  const [newDate, setNewDate] = useState('');
-
-  const [open, setOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newTaskData: TaskData = {
       id: Date.now(),
-      title: newTask,
+      title: title,
       descricao: newDescription,
       importante: newImportance,
       status: newStatus,
-      data: newDate,
+      data: new Date(),
     }
 
-
-    console.log(newTaskData);
     addTask(newTaskData);
-
     localStorage.setItem('tasks', JSON.stringify([...tasks, newTaskData]));
-    setNewTask('');
+
+    setTitle('');
+    setNewDescription('');
+    setNewImportance(false);
+    setNewStatus(TaskStatus.Pending);
+    setOpen(false);
   };
+
+  const handleClose = () => {
+    setOpen(false);
+  }
 
   return (
     <div>
-      <h2>Criar Tarefa</h2>
-      <form onSubmit={handleSubmit}>
-        <input className='text-black' type="text" value={newTask} onChange={(e) => setNewTask(e.target.value)} />
-        <input className='text-black' type="text" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
-        <input className='text-black' type="checkbox" onChange={(e) => setNewImportance(e.target.checked)} />
-        {/* <select className='text-black' value={newStatus} onChange={(e): TaskStatus => setNewStatus(e.target.value)}>
-          <option value={TaskStatus.Pending}>Pendente</option>
-          <option value={TaskStatus.Completed}>Feito</option>
-        <option value={TaskStatus.InProgress}>EmP Progresso</option>
-        </select> */}
-        <input className='text-black' type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} />
+      <Transition.Root show={true} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={handleClose}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </Transition.Child>
 
-        <button type="submit">Adicionar Tarefa</button>
-      </form>
-      {open && (
-        <Transition.Root show={open} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={setOpen}>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-            </Transition.Child>
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                  <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start sm:justify-between">
+                      <Dialog.Title as="h3" className="text-xl font-semibold leading-6 text-gray-900">
+                        Criar uma Tarefa
+                      </Dialog.Title>
+                      <button type="button" onClick={handleClose}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="black" className="w-6 h-6">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
 
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                    <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                      <div className="sm:flex sm:items-start">
-                        <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                          {/* <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" /> */}
-                        </div>
-                        <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                          <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                            Deactivate account
-                          </Dialog.Title>
+                    <div className="mt-8">
+                      <form onSubmit={handleSubmit}>
+                        <div className="sm:col-span-4">
+                          <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">
+                            Título
+                          </label>
                           <div className="mt-2">
-                            <p className="text-sm text-gray-500">
-                              Are you sure you want to deactivate your account? All of your data will be permanently
-                              removed. This action cannot be undone.
-                            </p>
+                            <input
+                              type="text"
+                              name="title"
+                              id="title"
+                              className="block w-full rounded-md border-0 p-4 py-1.5 text-gray-900 hover:ring-1 hover:ring-inset hover:ring-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-500 sm:text-sm sm:leading-6"
+                              placeholder='Ex.: Arrumar a casa'
+                              defaultValue={''}
+                              value={title}
+                              onChange={(e) => setTitle(e.target.value)}
+                            />
                           </div>
                         </div>
-                      </div>
+                        <div className="sm:col-span-3 w-full mt-4">
+                          <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
+                            Descrição (opcional)
+                          </label>
+                          <div className="mt-1">
+                            <textarea
+                              id="description"
+                              name="description"
+                              rows={3}
+                              className="block w-full rounded-md border-0 p-4 py-1.5 text-gray-900 hover:ring-1 hover:ring-inset hover:ring-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-500 sm:text-sm sm:leading-6"
+                              placeholder='Ex.: Limpar quartos e banheiros'
+                              value={newDescription}
+                              onChange={(e) => setNewDescription(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-row mt-4">
+                          <div className="sm:col-span-3">
+                            <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900">
+                              Status
+                            </label>
+                            <div className="mt-1">
+                              <select
+                                id="status"
+                                name="status"
+                                autoComplete="status-name"
+                                className="block w-full h-9 rounded-md border-0 p-4 py-1.5 text-gray-900 hover:ring-1 hover:ring-inset hover:ring-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-500 sm:max-w-xs sm:text-sm sm:leading-6"
+                                value={newStatus}
+                                // @ts-ignore
+                                onChange={(e) => setNewStatus(e.target.value)}
+                              >
+                                <option>{TaskStatus.Completed}</option>
+                                <option>{TaskStatus.InProgress}</option>
+                                <option>{TaskStatus.Pending}</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div className="sm:col-span-3 flex items-center ml-4">
+                            {newImportance ? (
+                              <div className="flex flex-row items-center gap-x-3 mt-6">
+                                <button type="button" onClick={(e) => setNewImportance(false)}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" className="w-6 h-6">
+                                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+                                  </svg>
+                                </button>
+                                <h2 className="text-sm font-medium leading-6 text-gray-900">
+                                  Importante
+                                </h2>
+                              </div>
+                            )
+                              :
+                              (
+                                <div className="flex flex-row items-center gap-x-3 mt-6">
+                                  <button type="button" onClick={(e) => setNewImportance(true)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="black" className="w-6 h-6">
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                                    </svg>
+                                  </button>
+                                  <h2 className="text-sm font-medium leading-6 text-gray-900">
+                                    Não Importante
+                                  </h2>
+                                </div>
+                              )
+                            }
+                          </div>
+                        </div>
+
+                        <div className="bg-gray-50 w-full pt-3 py-3 sm:flex sm:flex-row-reverse sm:col-span-3 mt-4">
+                          <button
+                            type="submit"
+                            className="justify-center rounded-md bg-red-600 py-2 text-base font-semibold text-white shadow-sm hover:bg-red-500 sm:w-full"
+
+                          >
+                            Adicionar Tarefa
+                          </button>
+                        </div>
+                      </form>
                     </div>
-                    <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                      <button
-                        type="button"
-                        className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                        onClick={() => setOpen(false)}
-                      >
-                        Deactivate
-                      </button>
-                      <button
-                        type="button"
-                        className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                        onClick={() => setOpen(false)}
-                      // ref={cancelButtonRef}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </Dialog.Panel>
-                </Transition.Child>
-              </div>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
             </div>
-          </Dialog>
-        </Transition.Root>
-      )}
-    </div>
+          </div >
+        </Dialog >
+      </Transition.Root >
+    </div >
   );
 };
