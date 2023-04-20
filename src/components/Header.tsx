@@ -9,7 +9,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-6 flex-col flex items-center justify-center">
+    <div className="mx-auto max-w-sm px-4 sm:px-6 lg:max-w-7xl lg:px-6 flex-col flex items-center justify-center">
       <h1 className="text-2xl font-semibold text-white">Tarefas</h1>
       <div className="w-full h-11 mt-8 flex items-center justify-center">
         <input
