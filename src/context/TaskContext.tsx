@@ -24,9 +24,9 @@ interface TaskContextValue {
 
 const TaskContext = createContext<TaskContextValue>({
   tasks: [],
-  addTask: () => {},
-  editTask: () => {},
-  removeTask: () => {},
+  addTask: () => { },
+  editTask: () => { },
+  removeTask: () => { },
 });
 
 interface TaskProviderProps {
@@ -53,8 +53,12 @@ export function TaskProvider({ children }: TaskProviderProps) {
   const editTask = (taskId: number, updatedTask: TaskData) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) => (task.id === taskId ? updatedTask : task))
+
     );
-    localStorage.setItem('tasks', JSON.stringify([...tasks, updatedTask]));
+    const tasksToUpdate = JSON.parse(localStorage.getItem('tasks') || '[]');
+    const taskIndex = tasksToUpdate.findIndex((task: TaskData) => task.id === taskId);
+    tasksToUpdate[taskIndex] = updatedTask;
+    localStorage.setItem('tasks', JSON.stringify(tasksToUpdate));
   };
 
   const removeTask = (taskId: number) => {

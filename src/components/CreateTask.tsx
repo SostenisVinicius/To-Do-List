@@ -1,18 +1,29 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Transition, Dialog } from "@headlessui/react";
 import { useTaskContext, TaskStatus, TaskData } from '../context/TaskContext';
+import { useRouter } from 'next/router';
 
 interface CreateTaskProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  edit?: boolean;
   task?: TaskData;
 }
-export function CreateTask({ setOpen, edit, task }: CreateTaskProps) {
-  const { addTask, tasks, editTask } = useTaskContext();
+export function CreateTask({ setOpen, task }: CreateTaskProps) {
+  const { addTask, editTask } = useTaskContext();
   const [title, setTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newImportance, setNewImportance] = useState(false);
   const [newStatus, setNewStatus] = useState(TaskStatus.Pending);
+
+  useEffect(() => {
+    if (task && task.descricao) {
+      setTitle(task.title);
+      setNewDescription(task.descricao);
+      setNewImportance(task.importante);
+      setNewStatus(task.status);
+    }
+  }, [task])
+
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,17 +42,12 @@ export function CreateTask({ setOpen, edit, task }: CreateTaskProps) {
     setNewDescription('');
     setNewImportance(false);
     setNewStatus(TaskStatus.Pending);
-    setOpen(false);
+    
+    // console.log(newTaskData.id);
+    
+    router.push(`/task/${newTaskData.id}`);
+    // setOpen(false);
   };
-
-  useEffect(() => {
-    if (task && task.descricao) {
-      setTitle(task.title);
-      setNewDescription(task.descricao);
-      setNewImportance(task.importante);
-      setNewStatus(task.status);
-    }
-  }, [task])
 
   const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,7 +122,7 @@ export function CreateTask({ setOpen, edit, task }: CreateTaskProps) {
                               id="title"
                               className="block w-full rounded-md border-0 p-4 py-1.5 text-gray-900 hover:ring-1 hover:ring-inset hover:ring-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-500 sm:text-sm sm:leading-6"
                               placeholder='Ex.: Arrumar a casa'
-                              defaultValue={task ? task.title : ''}
+                              defaultValue={title}
                               value={title}
                               onChange={(e) => setTitle(e.target.value)}
                             />
