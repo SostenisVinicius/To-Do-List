@@ -4,7 +4,7 @@ import { TaskData } from "../../context/TaskContext";
 import { Header } from "../../components/Header";
 import { Task } from "../../components/Task";
 
-export const TaskById = () => {
+export default function TaskById() {
   const { query } = useRouter();
   const { id } = query;
 
