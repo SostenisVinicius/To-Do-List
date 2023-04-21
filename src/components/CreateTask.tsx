@@ -98,7 +98,7 @@ export function CreateTask({ setOpen, task }: CreateTaskProps) {
               >
                 <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                   <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                    <div className="sm:flex sm:items-start sm:justify-between">
+                    <div className="flex justify-between sm:flex sm:items-start sm:justify-between">
                       <Dialog.Title as="h3" className="text-xl font-semibold leading-6 text-gray-900">
                         {task ? 'Editar Tarefa' : 'Criar uma Tarefa'}
                       </Dialog.Title>
@@ -198,7 +198,7 @@ export function CreateTask({ setOpen, task }: CreateTaskProps) {
                         <div className="bg-gray-50 w-full pt-3 py-3 sm:flex sm:flex-row-reverse sm:col-span-3 mt-4">
                           <button
                             type="submit"
-                            className="justify-center rounded-md bg-red-600 py-2 text-base font-semibold text-white shadow-sm hover:bg-red-500 sm:w-full"
+                            className="w-full inline-flex justify-center rounded-md bg-red-600 py-2 text-base font-semibold text-white shadow-sm hover:bg-red-500 sm:w-full"
                           >
                             {task ? 'Editar Tarefa' : 'Adicionar Tarefa'}
                           </button>

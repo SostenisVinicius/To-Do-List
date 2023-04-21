@@ -8,7 +8,7 @@ export function Page() {
   const [status, setStatus] = useState('');
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-8">
+    <main className="flex min-h-screen flex-col items-center justify-between p-4">
       <div className="flex flex-col items-center justify-center">
         <Header search={search} setSearch={setSearch} setStatus={setStatus}/>
         <TaskList search={search} status={status}/>

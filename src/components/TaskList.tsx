@@ -54,8 +54,8 @@ export function TaskList({ search, status }: TaskListProps) {
   }
 
   return (
-    <div className="mx-auto max-w-sm px-4 py-8 sm:max-w-3xl  sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
-      <div className=" grid grid-cols-1 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+    <div className="mx-auto max-w-sm px-0 py-8 sm:max-w-3xl  sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
+      <div className=" grid grid-cols-1 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 xl:gap-x-8">
         {tasksFiltered.map((tasks) => (
           <Task key={tasks.id} task={tasks} />
         ))}
