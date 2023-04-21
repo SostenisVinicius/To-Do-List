@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { TaskList } from '@/components/TaskList';
 import { Header } from '@/components/Header';
-import TaskById from './task/[id]';
 
 export function Page() {
   const [search, setSearch] = useState('');
