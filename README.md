@@ -47,3 +47,11 @@ cd To-Do-List
 npm install
 npm start
 ```
+
+
+## Observações
+- Aplicação feita seguindo a nova documentação do react para uma melhor experiência;
+- Foi usado o framework Next.JS para desenvolvimento assim como indicado pela nova documentação;
+- Foi usado o tailwind.ui e tailwind.css para desenvolvimento, pois é a indicação padrão do Next.js, visto que é uma estilização pre-render e evita erros de renderização para o usuário.
+- segue a documentação do react (https://react.dev/learn/start-a-new-react-project);
+- segue a documentação do next (https://nextjs.org/docs);
