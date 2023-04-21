@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TaskList } from '@/components/TaskList';
 import { Header } from '@/components/Header';
 
-export function Page() {
+export default function Page() {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
 
